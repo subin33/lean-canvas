@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 function create(baseURL, options) {
-  // assign 은 두개의 객체를 머지하는 메서드 
+  // assign 은 두개의 객체를 머지하는 메서드
   const instance = axios.create(Object.assign({ baseURL }), options);
   return instance;
 }
