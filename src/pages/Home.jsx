@@ -5,7 +5,7 @@ import ViewToggle from '../components/ViewToggle';
 import { getCanvases } from '../api/canvas';
 import Loading from '../components/Loding';
 import Error from '../components/Error';
-import { createCanvas } from '../api/canvas';
+import { createCanvas, deleteCanvas } from '../api/canvas';
 import Button from '../components/Button';
 
 function Home() {
@@ -33,8 +33,17 @@ function Home() {
     fetchData({ title_like: searchText });
   }, [searchText]);
 
-  const handleDeleteItem = id => {
-    setData(data.filter(item => item.id !== id));
+  const handleDeleteItem = async id => {
+    if (confirm('정말 삭제하시겠습니까?') === false) {
+      return;
+    }
+    try {
+      //delete logic
+      await deleteCanvas(id);
+      fetchData({ title_like: searchText });
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   const [isLoadingCreate, setIsLoadingCreate] = useState(false);
