@@ -5,6 +5,8 @@ import ViewToggle from '../components/ViewToggle';
 import { getCanvases } from '../api/canvas';
 import Loading from '../components/Loding';
 import Error from '../components/Error';
+import { createCanvas } from '../api/canvas';
+import Button from '../components/Button';
 
 function Home() {
   const [searchText, setSearchText] = useState();
@@ -35,11 +37,30 @@ function Home() {
     setData(data.filter(item => item.id !== id));
   };
 
+  const [isLoadingCreate, setIsLoadingCreate] = useState(false);
+  const handleCreateCanvas = async () => {
+    try {
+      setIsLoadingCreate(true);
+      await new Promise(resolver => setTimeout(resolver, 1000));
+      await createCanvas();
+      fetchData({ title_like: searchText });
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setIsLoadingCreate(false);
+    }
+  };
+
   return (
     <>
       <div className="mb-6 flex flex-col sm:flex-row items-center justify-between">
         <SearchBar searchText={searchText} setSearchText={setSearchText} />
         <ViewToggle setIsGridView={setIsGridView} isGridView={isGridView} />
+      </div>
+      <div className="flex justify-end mb-6">
+        <Button onClick={handleCreateCanvas} loading={isLoadingCreate}>
+          등록하기
+        </Button>
       </div>
       {isLoading && <Loading />}
       {error && (
