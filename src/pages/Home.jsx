@@ -1,44 +1,38 @@
 import { useEffect, useState } from 'react';
+import { createCanvas, deleteCanvas, getCanvases } from '../api/canvas';
+
 import CanvasList from '../components/CanvasList';
 import SearchBar from '../components/SearchBar';
 import ViewToggle from '../components/ViewToggle';
-import { getCanvases } from '../api/canvas';
-import Loading from '../components/Loding';
+import Loading from '../components/Loading';
 import Error from '../components/Error';
-import { createCanvas, deleteCanvas } from '../api/canvas';
 import Button from '../components/Button';
+import useApiRequest from '../hooks/useApiRequest';
 
 function Home() {
   const [searchText, setSearchText] = useState();
   const [isGridView, setIsGridView] = useState(true);
   const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  async function fetchData(params) {
-    try {
-      setIsLoading(true);
-      setError(null);
-      await new Promise(resolver => setTimeout(resolver, 1000));
-      const response = await getCanvases(params);
-      setData(response.data);
-    } catch (err) {
-      setError(err);
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  // API call
+  const { isLoading, error, execute: fetchData } = useApiRequest(getCanvases);
+  const { isLoading: isLoadingCreate, execute: createNewCanvas } =
+    useApiRequest(createCanvas);
 
   useEffect(() => {
-    fetchData({ title_like: searchText });
-  }, [searchText]);
+    fetchData(
+      { title_like: searchText },
+      {
+        onSuccess: response => setData(response.data),
+      },
+    );
+  }, [searchText, fetchData]);
 
   const handleDeleteItem = async id => {
-    if (confirm('정말 삭제하시겠습니까?') === false) {
+    if (confirm('삭제 하시겠습니까?') === false) {
       return;
     }
     try {
-      //delete logic
       await deleteCanvas(id);
       fetchData({ title_like: searchText });
     } catch (err) {
@@ -46,25 +40,35 @@ function Home() {
     }
   };
 
-  const [isLoadingCreate, setIsLoadingCreate] = useState(false);
   const handleCreateCanvas = async () => {
-    try {
-      setIsLoadingCreate(true);
-      await new Promise(resolver => setTimeout(resolver, 1000));
-      await createCanvas();
-      fetchData({ title_like: searchText });
-    } catch (err) {
-      alert(err.message);
-    } finally {
-      setIsLoadingCreate(false);
-    }
+    createNewCanvas(null, {
+      onSuccess: () => {
+        fetchData(
+          { title_like: searchText },
+          {
+            onSuccess: response => setData(response.data),
+          },
+        );
+      },
+      onError: err => alert(err.message),
+    });
+    // try {
+    //   setIsLoadingCreate(true);
+    //   await new Promise(resolver => setTimeout(resolver, 1000));
+    //   await createCanvas();
+    //   fetchData({ title_like: searchText });
+    // } catch (err) {
+    //   alert(err.message);
+    // } finally {
+    //   setIsLoadingCreate(false);
+    // }
   };
 
   return (
     <>
       <div className="mb-6 flex flex-col sm:flex-row items-center justify-between">
         <SearchBar searchText={searchText} setSearchText={setSearchText} />
-        <ViewToggle setIsGridView={setIsGridView} isGridView={isGridView} />
+        <ViewToggle isGridView={isGridView} setIsGridView={setIsGridView} />
       </div>
       <div className="flex justify-end mb-6">
         <Button onClick={handleCreateCanvas} loading={isLoadingCreate}>
