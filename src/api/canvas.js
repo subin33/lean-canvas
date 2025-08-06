@@ -2,12 +2,13 @@ import { canvases } from './http';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
 
-export function getCanvases(params) {
+export async function getCanvases(params) {
   const payload = Object.assign(
     { _sort: 'lastModified', _order: 'desc' },
     params,
   );
-  return canvases.get('/', { params: payload });
+  const { data } = await canvases.get('/', { params: payload });
+  return data;
 }
 
 export function createCanvas() {
@@ -40,6 +41,6 @@ export async function updateTitle(id, title) {
   await canvases.patch(`/${id}`, { title });
 }
 
-export async function updateCanvas(id,canvas) {
-  await canvases.put(`/${id}`,canvas)
+export async function updateCanvas(id, canvas) {
+  await canvases.put(`/${id}`, canvas);
 }
