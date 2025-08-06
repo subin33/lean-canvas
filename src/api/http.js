@@ -5,9 +5,11 @@ function create(baseURL, options) {
   const instance = axios.create(Object.assign({ baseURL }), options);
   return instance;
 }
+console.log(
+  'import.meta.env.VITE_API_BASE_URL',
+  import.meta.env.VITE_API_BASE_URL,
+);
 
 export const canvases = create(
-  'https://json-server-vercel-psi-seven.vercel.app/canvases',
+  `${import.meta.env.VITE_API_BASE_URL}/canvases/`,
 );
-// export const canvases = create('http://localhost:8000/canvases/');
-// export const posts = create('http://localhost:8000/posts/');
