@@ -29,7 +29,6 @@ function Home() {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['canvases', filter.searchText, filter.category],
     queryFn: () => {
-      console.log('fetching data');
       return getCanvases({
         title_like: filter.searchText,
         category: filter.category,

@@ -5,7 +5,6 @@ const CardComponent = styled.div.attrs({ className: 'card-container' })`
   padding: 24px;
   border-radius: 6px;
   ${props => {
-    console.log('props: ', props);
     return (
       props.dark &&
       `
