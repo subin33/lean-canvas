@@ -11,9 +11,9 @@ import Button from './Button';
 
 function Header() {
   const navItems = [
-    { id: 'home', label: 'Home', icon: <FaHome />, to: '/' },
-    { id: 'about', label: 'About', icon: <FaInfoCircle />, to: '/about' },
-    { id: 'contact', label: 'Contact', icon: <FaEnvelope />, to: '/contact' },
+    // { id: 'home', label: 'Home', icon: <FaHome />, to: '/' },
+    // { id: 'about', label: 'About', icon: <FaInfoCircle />, to: '/about' },
+    // { id: 'contact', label: 'Contact', icon: <FaEnvelope />, to: '/contact' },
   ];
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,7 +23,7 @@ function Header() {
       <div className="container mx-auto flex justify-between items-center h-14">
         <div>
           <Link to="/" className="text-xl font-bold">
-            GROW Canvas
+            lean Canvas
           </Link>
         </div>
         <nav className="hidden md:flex space-x-4">
@@ -36,7 +36,7 @@ function Header() {
         <button className="md:hidden" onClick={toggleMenu}>
           <FaBars />
         </button>
-        <Button className="hidden md:block">hi</Button>
+        {/* <Button className="hidden md:block">hi</Button> */}
       </div>
 
       {/* Mobile Menu */}

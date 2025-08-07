@@ -33,15 +33,29 @@ const Note = ({
       textareaRef.current.style.height =
         textareaRef.current.scrollHeight + 'px';
     }
-  }, [content]);
+  }, [localContent]);
 
   const handleContentChange = () => {
     onUpdateNote(id, localContent, color);
   };
+
   const handleColorChange = newColor => {
     setColor(newColor);
-    onUpdateNote(id, content, newColor);
+    onUpdateNote(id, localContent, newColor);
   };
+
+  const handleCheckNote = e => {
+    e.stopPropagation();
+    // 내용을 저장하고 편집 모드 종료
+    onUpdateNote(id, localContent, color);
+    setIsEditing(false);
+  };
+
+  const handleRemoveNote = e => {
+    e.stopPropagation();
+    onRemoveNote(id);
+  };
+
   return (
     <div
       className={`p-4 ${color} relative max-h-[32rem] overflow-hidden`}
@@ -51,22 +65,18 @@ const Note = ({
         {isEditing ? (
           <button
             aria-label="Check Note"
-            className="text-gray-700"
-            onClick={e => {
-              e.stopPropagation();
-              onRemoveNote(id);
-            }}
+            className="text-gray-700 hover:text-green-600 transition-colors"
+            onClick={handleCheckNote}
+            title="저장하고 편집 종료"
           >
             <AiOutlineCheck size={20} />
           </button>
         ) : (
           <button
-            aria-label="Close Note"
-            className="text-gray-700"
-            onClick={e => {
-              e.stopPropagation();
-              onRemoveNote(id);
-            }}
+            aria-label="Remove Note"
+            className="text-gray-700 hover:text-red-600 transition-colors"
+            onClick={handleRemoveNote}
+            title="노트 삭제"
           >
             <AiOutlineClose size={20} />
           </button>
@@ -84,11 +94,11 @@ const Note = ({
         readOnly={!isEditing}
       />
       {isEditing && (
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 mt-2">
           {colorOptions.map((option, index) => (
             <button
               key={index}
-              className={`w-6 h-6 rounded-full cursor-pointer outline outline-gray-50 ${option}`}
+              className={`w-6 h-6 rounded-full cursor-pointer outline outline-gray-50 ${option} hover:scale-110 transition-transform`}
               onClick={() => handleColorChange(option)}
               aria-label={`Change color to ${option}`}
             />

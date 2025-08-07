@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { createCanvas, deleteCanvas, getCanvases } from '../api/canvas';
+import { mapSupabaseToCanvas } from '../utils/dataMapper';
 
 import CanvasList from '../components/CanvasList';
 import SearchBar from '../components/SearchBar';
@@ -28,11 +29,13 @@ function Home() {
   // 1] 데이터 조회
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['canvases', filter.searchText, filter.category],
-    queryFn: () => {
-      return getCanvases({
+    queryFn: async () => {
+      const rawData = await getCanvases({
         title_like: filter.searchText,
         category: filter.category,
       });
+      // Supabase 데이터를 기존 형식으로 변환
+      return rawData.map(mapSupabaseToCanvas);
     },
     // initialData: [],
     staleTime: 1000 * 60 * 5, //5분 동안 데이터가 신선함(fresh) 상태로 유지
