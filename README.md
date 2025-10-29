@@ -65,7 +65,7 @@ Lean Canvas is a web application that helps startups and businesses systematical
 
 ### Main Canvas View
 
-<img src="./src/assets/main-canvas-view.png" alt="User Profile" width="350" />
+<img src="./src/assets/main-canvas-view.png" alt="User Profile" width="600" />
 
 ### Canvas Detail Page
 
